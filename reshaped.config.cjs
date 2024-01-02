@@ -1,10 +1,10 @@
 const { generateThemeColors } = require("reshaped/themes");
 
-const colors = generateThemeColors({ primary: "#ff0000" });
+const colors = generateThemeColors({ primary: "#5371F4" });
 
 const config = {
     themes: {
-        new: {
+        myxMain: {
             color: colors
         },
     },

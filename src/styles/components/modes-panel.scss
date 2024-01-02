@@ -1,0 +1,38 @@
+.modes-panel {
+  position: relative;
+  display: flex;
+  transition: width 0.3s ease-out;
+
+  &.active {
+    width: 500px;
+    max-width: 90%;
+  }
+
+  &:not(.active) {
+    width: 0!important;
+  }
+
+  &.resizing {
+    transition: unset;
+  }
+
+  .modes-panel-content {
+    position: absolute;
+    top: 0;
+    left: 0;
+    min-width: 500px;
+    max-width: 100%;
+    width: 100%;
+  }
+}
+
+.modes-panel-resizer {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 5px;
+  height: 100%;
+  background: orange;
+  cursor: col-resize;
+  z-index: 1;
+}

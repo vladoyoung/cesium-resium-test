@@ -1,5 +1,5 @@
-import {useEffect, useState} from "react";
-import {useCesium} from "resium";
+import {useCallback, useEffect} from "react";
+import useViewer from "@contexts/useViewer.tsx";
 import {
     Math,
     ScreenSpaceEventType,
@@ -13,32 +13,15 @@ import {
     Cartesian2 as Vec2,
     ScreenSpaceEventHandler, PositionProperty, Property
 } from "cesium";
+import {Text, View} from 'reshaped'
 
-const TestComponent = () => {
-    const { viewer } = useCesium();
+const Location = () => {
+    const viewer = useViewer();
 
-    const [active, setActive] = useState(false);
-    // console.log(tileset?.boundingSphere)
-    let currIcon    : Entity | null = null
+    let currIcon    : Entity | null = null;
     let cursorLabel : Entity | null = null;
-    let currRect    : Entity | null = null;
+    const currRect    : Entity | null = null;
 
-    useEffect(() => {
-        if (!viewer) return;
-        if (active) {
-            viewer.screenSpaceEventHandler.setInputAction((ev: ScreenSpaceEventHandler.PositionedEvent) => onLeftClick(ev), ScreenSpaceEventType.LEFT_CLICK);
-            viewer.screenSpaceEventHandler.setInputAction((ev: ScreenSpaceEventHandler.MotionEvent) => onMouseMove(ev), ScreenSpaceEventType.MOUSE_MOVE);
-        } else {
-            viewer.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
-            viewer.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
-            viewer.entities.removeAll();
-        }
-        viewer.scene.requestRender();
-    }, [active]);
-
-    if (!viewer) return
-
-    // console.log(viewer)
 
     viewer?.cesiumWidget.creditContainer.remove()
 
@@ -57,27 +40,21 @@ const TestComponent = () => {
     }
 
 
-    const removeEntities = () => {
-        if(cursorLabel) {
-            viewer.entities.remove(cursorLabel);
-            cursorLabel = null;
-        }
+    const removeEntities = useCallback((onlyIcon: boolean = false) => {
+        const allModeEntities = onlyIcon ? [currIcon] : [currIcon, currRect, cursorLabel]
+        allModeEntities.forEach((entity) => {
+            if (entity) {
+                viewer.entities.remove(entity);
+                entity = null;
+            }
+        })
+    }, [currIcon, currRect, cursorLabel, viewer])
 
-        if(currIcon) {
-            viewer.entities.remove(currIcon);
-            currIcon = null;
-        }
-
-        if(currRect) {
-            viewer.entities.remove(currRect);
-            currRect = null;
-        }
-    }
-
-    const createIcon = (position: Vec3) => {
-        removeEntities();
+    const createIcon = useCallback((position: Vec3) => {
+        removeEntities(true);
         // viewer?.entities.removeAll();
 
+        // eslint-disable-next-line react-hooks/exhaustive-deps
         currIcon = viewer?.entities.add({
             position: position,
             billboard: {
@@ -90,10 +67,10 @@ const TestComponent = () => {
         });
 
         viewer?.scene.requestRender();
-    }
+    }, [viewer]);
 
-    const onLeftClick = (event : ScreenSpaceEventHandler.PositionedEvent) => {
-        console.log('loc tool click')
+    const onLeftClick = useCallback((event : ScreenSpaceEventHandler.PositionedEvent) => {
+        // console.log('loc tool click')
         const cartesian = viewer?.scene.pickPosition(event.position);
         // const clickingOnTileset = defined(viewer?.scene.pick(event.position, 1, 1)) && viewer?.scene.pickPositionSupported;
         // console.log('clickingontileset:',clickingOnTileset)
@@ -113,12 +90,12 @@ const TestComponent = () => {
 
         const text = `${latitude.toFixed(6)}, ${longitude.toFixed(6)}, ${altitude.toFixed(2)}m`;
         navigator.clipboard.writeText(text);
-    }
+    }, [createIcon, viewer]);
 
-    const showCursorLabel = (cartesian: Vec3) => {
+    const showCursorLabel = useCallback((cartesian: Vec3) => {
         const text = cartographicMeasureFormatter(cartesian);
-
         if(cursorLabel == null) {
+            // eslint-disable-next-line react-hooks/exhaustive-deps
             cursorLabel = viewer.entities.add({
                 position: cartesian,
                 label: {
@@ -142,36 +119,35 @@ const TestComponent = () => {
                 cursorLabel.label.text = text as unknown as Property;
             }
         }
-    }
+    }, [viewer, cursorLabel]);
 
-    const onMouseMove = (event : ScreenSpaceEventHandler.MotionEvent) => {
+    const onMouseMove = useCallback((event : ScreenSpaceEventHandler.MotionEvent) => {
         const cartesian = viewer.scene.pickPosition(event.endPosition);
         // const hoveringOnTileset = defined(viewer.scene.pick(event.endPosition, 1, 1)) && viewer.scene.pickPositionSupported;
         if(cartesian == null) return;
 
         showCursorLabel(cartesian);
         viewer.scene.requestRender();
-    }
+    }, [showCursorLabel, viewer]);
 
-    const handleLocationToolButtonClick = () => {
-        setActive(!active);
-    }
+    useEffect(() => {
+        viewer.screenSpaceEventHandler.setInputAction((ev: ScreenSpaceEventHandler.PositionedEvent) => onLeftClick(ev), ScreenSpaceEventType.LEFT_CLICK);
+        viewer.screenSpaceEventHandler.setInputAction((ev: ScreenSpaceEventHandler.MotionEvent) => onMouseMove(ev), ScreenSpaceEventType.MOUSE_MOVE);
+        viewer.scene.requestRender();
+        return () => {
+            viewer.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.LEFT_CLICK);
+            viewer.screenSpaceEventHandler.removeInputAction(ScreenSpaceEventType.MOUSE_MOVE);
+            removeEntities();
+            viewer.scene.requestRender();
+        }
+    }, [currIcon, currRect, cursorLabel, onLeftClick, onMouseMove, removeEntities, viewer]);
 
     return (
-        <>
-            <div
-                id="location-tool-button"
-                tabIndex={0}
-                onClick={handleLocationToolButtonClick}
-            >
-                Location tool
-                {active && ' active'}
-            </div>
-            {active &&
-                <div>the location tool panel that should be destroyed if the tool is not active</div>
-            }
-        </>
+        <View padding={4}>
+            <Text variant="title-6" align="center" as="h4">Location tool</Text>
+            <p>content here</p>
+        </View>
     );
 };
 
-export default TestComponent;
+export default Location;

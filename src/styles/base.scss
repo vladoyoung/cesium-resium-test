@@ -1,0 +1,31 @@
+.cesium-viewer-toolbar,
+.cesium-viewer-vrContainer,
+.cesium-viewer-timelineContainer,
+.cesium-viewer-animationContainer {
+  display: none!important;
+}
+
+main {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: stretch;
+  height: 100vh;
+}
+
+#cesiumOuterContainer {
+  position: relative;
+  width: 100%;
+  height: 300px;
+  flex: 1;
+  display: flex;
+  flex-direction: row;
+}
+
+#cesiumContainer {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  flex: 1;
+  height: 100%; // Cesium recalculates this on load
+}

@@ -1,11 +1,30 @@
 import React from 'react'
 import ReactDOM from 'react-dom/client'
+import {
+    createBrowserRouter,
+    RouterProvider,
+} from "react-router-dom";
 import App from './App.tsx'
-import './App.css'
-import './index.css'
+import ResourceNotFound from './pages/ResourceNotFound.tsx'
+import './styles/index.scss'
+
+const router = createBrowserRouter([
+    {
+        path: "twins/:twinId",
+        element: <App/>,
+        errorElement: <ResourceNotFound/>,
+    },
+    {
+        path: "/",
+        loader: async () => {
+            window.location.href = 'https://platform.myxrobotics.com/'
+            return null
+        }
+    }
+]);
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
-      <App />
+      <RouterProvider router={router}/>
   </React.StrictMode>,
 )
