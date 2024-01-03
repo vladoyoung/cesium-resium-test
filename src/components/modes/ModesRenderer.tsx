@@ -27,6 +27,7 @@ const ModesRenderer = () => {
         }
     }, [activeModeComponent, nameOfActiveMode]);
 
+
     return activeMode.component && (
         <div className={`mode`} id={activeMode.name}>
             {activeMode.component}

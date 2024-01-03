@@ -3,7 +3,7 @@ import {useEffect, useRef, useCallback} from "react";
 import useActiveStates from "@/contexts/useActiveStates.tsx";
 import useViewer from "@/contexts/useViewer.tsx";
 import tileset from "@/utils/tileset.tsx";
-import useCesiumContainerBottomCenterAlert from "@contexts/useCesiumContainerBottomCenterAlert.tsx";
+import useViewerBottomCenterAlert from "@contexts/useViewerBottomCenterAlert.tsx";
 import {
     Cartesian2 as Vec2,
     Cartesian3 as Vec3,
@@ -18,7 +18,7 @@ import {
 const LowRes = () => {
     const { activeStates, toggleState } = useActiveStates();
     const viewer = useViewer();
-    const { setAlertText } = useCesiumContainerBottomCenterAlert();
+    const { setAlertText } = useViewerBottomCenterAlert();
     const gridEntity = useRef<Entity | null>(null);
 
 

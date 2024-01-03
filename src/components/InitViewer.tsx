@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {ViewerProvider} from '@contexts/ViewerContext.tsx';
 import {Viewer, Terrain, CesiumTerrainProvider, ImageryLayer, IonImageryProvider} from 'cesium';
-import CesiumContainer from "@components/CesiumContainer.tsx";
+import ViewerOverlayElements from "@components/ViewerOverlayElements.tsx";
 import ModesPanel from "@components/modes/ModesPanel.tsx";
 
 type Props = {
@@ -38,7 +38,11 @@ const InitViewer = ({ children } : Props) => {
                     children
                 }
                 <div id="cesiumOuterContainer">
-                    <CesiumContainer/>
+                    <div id="cesiumContainer">
+                        {viewerElement &&
+                            <ViewerOverlayElements/>
+                        }
+                    </div>
                     <ModesPanel/>
                 </div>
             </main>

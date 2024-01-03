@@ -1,9 +1,9 @@
 import {Text, View} from "reshaped";
-import useCesiumContainerBottomLeftAlert from "@contexts/useCesiumContainerBottomLeftAlert.tsx";
+import useViewerBottomLeftAlert from "@contexts/useViewerBottomLeftAlert.tsx";
 import {useEffect} from "react";
 
 const Measurements = () => {
-    const { setAlertText } = useCesiumContainerBottomLeftAlert();
+    const { setAlertText } = useViewerBottomLeftAlert();
 
     useEffect(() => {
         setAlertText('Make a new measurement from the sidebar.');

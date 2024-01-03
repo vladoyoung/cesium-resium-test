@@ -9,6 +9,7 @@ type ActiveStatesContextType = {
     activeStates: ActiveStates;
     toggleState: (state: keyof ActiveStates) => void;
     setState: (state: keyof ActiveStates, value: boolean) => void;
+    deactivateAllStates: () => void;
 };
 
 type SetState = (state: keyof ActiveStates, value: boolean) => void;
@@ -39,8 +40,16 @@ const ActiveStatesProvider: React.FC<ActiveStatesProviderProps> = ({ children })
         }));
     }, []);
 
+    const deactivateAllStates = useCallback(() => {
+        setActiveStates((prevStates) => ({
+            ...prevStates,
+            compass: false,
+            // Keep lowRes unchanged
+        }));
+    }, []);
+
     return (
-        <ActiveStatesContext.Provider value={{ activeStates, toggleState, setState }}>
+        <ActiveStatesContext.Provider value={{ activeStates, toggleState, setState, deactivateAllStates }}>
             {children}
         </ActiveStatesContext.Provider>
     );

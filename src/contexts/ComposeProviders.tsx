@@ -1,8 +1,8 @@
 import React from "react";
 import { ActiveModesProvider } from "@contexts/ActiveModesContext.tsx";
 import { ActiveStatesProvider } from "@contexts/ActiveStatesContext.tsx";
-import { CesiumContainerBottomLeftAlertProvider } from "@contexts/CesiumContainerBottomLeftAlertContext.tsx";
-import { CesiumContainerBottomCenterAlertProvider } from "@contexts/CesiumContainerBottomCenterAlertContext.tsx";
+import { ViewerBottomLeftAlertProvider } from "@contexts/ViewerBottomLeftAlertContext.tsx";
+import { ViewerBottomCenterAlertProvider } from "@contexts/ViewerBottomCenterAlertContext.tsx";
 
 interface Props {
     components: Array<React.JSXElementConstructor<React.PropsWithChildren<unknown>>> | unknown;
@@ -32,7 +32,7 @@ type ActiveModesProviderProps = {
 
 export default function ComposeProviders({ children }: ActiveModesProviderProps) {
     return (
-        <Compose components={[ActiveModesProvider, ActiveStatesProvider, CesiumContainerBottomLeftAlertProvider, CesiumContainerBottomCenterAlertProvider]}>
+        <Compose components={[ActiveModesProvider, ActiveStatesProvider, ViewerBottomLeftAlertProvider, ViewerBottomCenterAlertProvider]}>
             {children}
         </Compose>
     );

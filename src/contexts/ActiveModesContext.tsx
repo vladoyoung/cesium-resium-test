@@ -9,6 +9,7 @@ export interface ActiveModes {
 type ActiveModesContextType = {
     activeModes: ActiveModes;
     toggleMode: (mode: keyof ActiveModes) => void;
+    deactivateAllModes: () => void;
 };
 
 export const ActiveModesContext = createContext<ActiveModesContextType | undefined>(undefined);
@@ -35,8 +36,17 @@ const ActiveModesProvider: React.FC<ActiveModesProviderProps> = ({ children }) =
         });
     };
 
+    const deactivateAllModes = () => {
+        const initialState: ActiveModes = Object.keys(activeModes).reduce((acc, key) => {
+            acc[key as keyof ActiveModes] = false;
+            return acc;
+        }, {} as ActiveModes);
+
+        setActiveModes(initialState);
+    }
+
     return (
-        <ActiveModesContext.Provider value={{ activeModes, toggleMode }}>
+        <ActiveModesContext.Provider value={{ activeModes, toggleMode, deactivateAllModes }}>
             {children}
         </ActiveModesContext.Provider>
     );
