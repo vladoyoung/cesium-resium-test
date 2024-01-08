@@ -1,8 +1,7 @@
 import { Button } from "reshaped";
 import {useEffect, useRef, useCallback} from "react";
 import useActiveStates from "@/contexts/useActiveStates.tsx";
-import useViewer from "@/contexts/useViewer.tsx";
-import tileset from "@/utils/tileset.tsx";
+import useViewer from "@contexts/useViewer.tsx";
 import useViewerBottomCenterAlert from "@contexts/useViewerBottomCenterAlert.tsx";
 import {
     Cartesian2 as Vec2,
@@ -14,12 +13,14 @@ import {
     Matrix4 as Mat4, Rectangle,
     Transforms
 } from "cesium";
+import useTileset from "@contexts/useTileset.tsx";
 
 const LowRes = () => {
     const { activeStates, toggleState } = useActiveStates();
-    const viewer = useViewer();
+    const {viewer} = useViewer();
     const { setAlertText } = useViewerBottomCenterAlert();
     const gridEntity = useRef<Entity | null>(null);
+    const { tileset } = useTileset()
 
 
     const createGrid = useCallback(() => {

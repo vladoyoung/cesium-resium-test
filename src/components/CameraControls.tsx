@@ -1,10 +1,11 @@
 import {Button, View} from "reshaped";
 import {BoundingSphere, HeadingPitchRange} from "cesium";
 import useViewer from "@/contexts/useViewer.tsx";
-import tileset from "@utils/tileset.tsx";
+import useTileset from "@contexts/useTileset.tsx";
 
 const CameraControls = () => {
-    const viewer = useViewer();
+    const {viewer} = useViewer();
+    const { tileset} = useTileset();
     const boundingSphere = new BoundingSphere(tileset.boundingSphere.center, 20), lookingAngle = -Math.PI / 8;
     const cameraPresets = {
         'north': 180,

@@ -2,12 +2,13 @@ import { Button } from "reshaped";
 import useActiveStates from "@/contexts/useActiveStates.tsx";
 import useActiveModes from "@/contexts/useActiveModes.tsx";
 import useViewer from "@/contexts/useViewer.tsx";
-import tileset from "@/utils/tileset.tsx";
+import useTileset from "@contexts/useTileset.tsx";
 
 const Reset = () => {
     const { deactivateAllStates } = useActiveStates();
     const { deactivateAllModes } = useActiveModes();
-    const viewer = useViewer();
+    const {viewer} = useViewer();
+    const { tileset } = useTileset()
 
     const handleClick = () => {
         deactivateAllModes();

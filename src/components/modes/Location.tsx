@@ -16,14 +16,11 @@ import {
 import {Text, View} from 'reshaped'
 
 const Location = () => {
-    const viewer = useViewer();
+    const {viewer} = useViewer();
 
     let currIcon    : Entity | null = null;
     let cursorLabel : Entity | null = null;
     const currRect    : Entity | null = null;
-
-
-    viewer?.cesiumWidget.creditContainer.remove()
 
     const cartographicMeasureFormatter = (p: Vec3) => {
         const cartographic = Cartographic.fromCartesian(p);

@@ -1,12 +1,24 @@
-import React, { createContext } from 'react';
-import {Viewer} from "cesium";
+import React, { createContext, useState } from 'react';
+import { Viewer } from 'cesium';
 
-export const ViewerContext = createContext(undefined) as unknown as React.Context<Viewer | undefined>;
+type ViewerContextType = {
+    viewer: Viewer;
+    setViewer: React.Dispatch<React.SetStateAction<Viewer>>;
+};
 
-type Props = {
-    children: React.ReactNode
-    viewerElement: Viewer | undefined
-}
-export const ViewerProvider = ({ children, viewerElement } : Props) => (
-    <ViewerContext.Provider value={viewerElement}>{children}</ViewerContext.Provider>
-);
+export const ViewerContext = createContext<ViewerContextType | undefined>(undefined);
+
+type ViewerProviderProps = {
+    children: React.ReactNode;
+    viewerElement: Viewer;
+};
+
+export const ViewerProvider = ({ children, viewerElement }: ViewerProviderProps) => {
+    const [currentViewer, setViewer] = useState<Viewer>(viewerElement);
+
+    return (
+        <ViewerContext.Provider value={{ viewer: currentViewer, setViewer }}>
+            {children}
+        </ViewerContext.Provider>
+    );
+};
